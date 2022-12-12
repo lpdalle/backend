@@ -1,7 +1,7 @@
 from dataclasses import asdict
 from flask import Flask, request
 from storage import UserStorage
-from uuid import uuid4
+
 
 app = Flask(__name__)
 
