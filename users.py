@@ -10,11 +10,11 @@ class Users:
     login: str
     email: str
 
-users = []
+users = {}
 user1 = Users(uuid4().hex, 'vasya', 'vasya@sobak.net')
 user2 = Users(uuid4().hex, 'mafusail', 'mafu@naturlich.net')
-users.append(user1)
-users.append(user2)
+users[user1.uid] = user1
+users[user2.uid] = user2
 
 
 @app.get('/api/v1/users/')
@@ -24,10 +24,9 @@ def get_all():
 
 @app.get('/api/v1/users/<string:uid>')
 def get_by_uid(uid: str):
-    for user in users:
-        if user.uid == uid:
-            return asdict(user)
-    return 'Такого пользователя нет', 404
+    if users.get(uid):
+        return asdict(users[uid])
+    return {}, 404
 
 
 @app.post('/api/v1/users/')
@@ -38,25 +37,22 @@ def add():
     user_login = request.json["login"]
     user_email = request.json["email"]
     new_user = Users(uid=user['uid'], login=user_login, email=user_email)
-    users.append(new_user)
+    users[new_user.uid] = new_user
     return user, 201
 
 
 @app.put('/api/v1/users/<string:uid>')
 def update(uid: str):
-    update_user = request.json
-    for user in users:
-        if user.uid == uid:
-            user.login = update_user["login"]
-            user.email = update_user["email"]
-            return asdict(user)
-    return 'Такого пользователя нет', 404
+    user_login = request.json["login"]
+    user_email = request.json["email"]
+    users[uid] = Users(uid=uid, login=user_login, email=user_email)
+    return asdict(users[uid]), 201
 
 
 @app.delete('/api/v1/users/<string:uid>')
 def delete(uid):
-    users[:] = [user for user in users if user.uid != uid]
-    return [], 204
+    del users[uid]
+    return {}, 204
 
 
 
