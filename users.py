@@ -1,4 +1,3 @@
-from dataclasses import dataclass, asdict
 from flask import Flask, request
 from storage import UserStorage
 from uuid import uuid4
