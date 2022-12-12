@@ -1,6 +1,7 @@
+from dataclasses import asdict
 from flask import Flask, request
 from storage import UserStorage
-from uuid import uuid4
+
 
 app = Flask(__name__)
 
@@ -14,7 +15,7 @@ def get_all():
 @app.get('/api/v1/users/<string:uid>')
 def get_by_uid(uid: str):
     if users.get_by_uid(uid):
-        return users.get_by_uid(uid)
+        return asdict(users.get_by_uid(uid))
     return {}, 404
 
 
@@ -31,14 +32,13 @@ def add():
 def update(uid: str):
     user_login = request.json["login"]
     user_email = request.json["email"]
-    users.update(uid=uid, login=user_login, email=user_email)
-    return users.get_by_uid(uid), 201
+    return asdict(users.update(uid=uid, login=user_login, email=user_email)), 201
+
 
 
 @app.delete('/api/v1/users/<string:uid>')
 def delete(uid):
-    if users.get_by_uid(uid):
-        users.delete(uid)
+    if users.delete(uid):
         return {}, 204
     return {}, 404
 
