@@ -1,8 +1,5 @@
 from dataclasses import dataclass
-<<<<<<< HEAD
 from uuid import uuid4
-=======
->>>>>>> 939192662975d5f26c2c01e132130e9dc1eb9b1c
 
 
 @dataclass
