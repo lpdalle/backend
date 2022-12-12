@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from flask import Flask, request
 from uuid import uuid4
 
@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 @dataclass
 class Users:
-    uid: hex
+    uid: str
     login: str
     email: str
 
@@ -17,23 +17,17 @@ users.append(user1)
 users.append(user2)
 
 
-
-@app.route('/')
-def hello():
-    return 'Hello'
-
-
 @app.get('/api/v1/users/')
 def get_all():
     return users
 
 
-@app.get('/api/v1/users/')
-def get_by_uid(uid):
+@app.get('/api/v1/users/<string:uid>')
+def get_by_uid(uid: str):
     for user in users:
-        if request.json["uid"] == uid:
-            return user
-    return None
+        if user.uid == uid:
+            return asdict(user)
+    return 'Такого пользователя нет', 404
 
 
 @app.post('/api/v1/users/')
@@ -47,13 +41,22 @@ def add():
     users.append(new_user)
     return user, 201
 
-@app.put('/api/v1/users/')
-def update(uid):
-    pass
 
-@app.delete('/api/v1/users/')
+@app.put('/api/v1/users/<string:uid>')
+def update(uid: str):
+    update_user = request.json
+    for user in users:
+        if user.uid == uid:
+            user.login = update_user["login"]
+            user.email = update_user["email"]
+            return asdict(user)
+    return 'Такого пользователя нет', 404
+
+
+@app.delete('/api/v1/users/<string:uid>')
 def delete(uid):
-    pass
+    users[:] = [user for user in users if user.uid != uid]
+    return [], 204
 
 
 
