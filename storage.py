@@ -1,5 +1,4 @@
-from dataclasses import dataclass, asdict
-from uuid import uuid4
+from dataclasses import dataclass
 
 
 @dataclass
