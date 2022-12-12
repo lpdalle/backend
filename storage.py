@@ -39,5 +39,5 @@ class UserStorage:
         if self.storage.get(uid):
             del self.storage[uid]
             return True
-        return None
+        return False
 
