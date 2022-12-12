@@ -11,15 +11,11 @@ class Users:
     email: str
 
 users = {}
-user1 = Users(uuid4().hex, 'vasya', 'vasya@sobak.net')
-user2 = Users(uuid4().hex, 'mafusail', 'mafu@naturlich.net')
-users[user1.uid] = user1
-users[user2.uid] = user2
 
 
 @app.get('/api/v1/users/')
 def get_all():
-    return users
+    return list(users.values())
 
 
 @app.get('/api/v1/users/<string:uid>')
@@ -51,8 +47,10 @@ def update(uid: str):
 
 @app.delete('/api/v1/users/<string:uid>')
 def delete(uid):
-    del users[uid]
-    return {}, 204
+    if users.get(uid):
+        del users[uid]
+        return {}, 204
+    return {}, 404
 
 
 
