@@ -18,7 +18,7 @@ class UserStorage:
         return list(self.storage.values())
 
 
-    def get_by_uid(self, uid: str) -> User:
+    def get_by_uid(self, uid: str) -> User | None:
         if self.storage.get(uid):
             return self.storage[uid]
 
@@ -31,8 +31,10 @@ class UserStorage:
 
 
     def update(self, uid: str, login: str, email: str) -> User:
-        self.storage[uid] = User(uid=uid, login=login, email=email)
-        return self.storage[uid]
+        update_user = self.storage[uid]
+        update_user.email = email
+        update_user.login = login
+        return update_user
 
 
     def delete(self, uid: str) -> bool:
