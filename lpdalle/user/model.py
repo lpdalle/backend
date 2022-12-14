@@ -1,6 +1,6 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, String
 from sqlalchemy.dialects.postgresql import UUID
-from db import Base, engine
+from lpdalle.user.db import Base, engine
 
 
 class User(Base):
