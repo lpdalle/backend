@@ -1,11 +1,11 @@
-
 from dataclasses import dataclass
 from uuid import uuid4
 
 
+
 @dataclass
 class User:
-    uid: str
+    uid: int #str
     login: str
     email: str
 

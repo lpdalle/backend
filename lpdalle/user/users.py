@@ -1,7 +1,8 @@
 from dataclasses import asdict
 from flask import request
 from flask import Blueprint
-from lpdalle.user.storage import UserStorage
+#from lpdalle.user.storage import UserStorage
+from lpdalle.user.db_storage import UserStorage
 
 
 users_view = Blueprint('users', __name__)
@@ -11,15 +12,23 @@ user_storage = UserStorage()
 @users_view.get('/')
 def get_all():
     users = user_storage.get_all()
-    return [asdict(user) for user in users]
+    return users
 
 
-@users_view.get('/<string:uid>')
-def get_by_uid(uid: str):
-    if user_storage.get_by_uid(uid):
-        return asdict(user_storage.get_by_uid(uid))
+# @users_view.get('/<string:uid>')
+# def get_by_uid(uid: str):
+#     user = user_storage.get_by_uid(uid)
+#     if user:
+#         return user
+#         # return asdict(user_storage.get_by_uid(uid))
+#     return {}, 404
+
+@users_view.get('/<string:login>')
+def get_by_login(login: str):
+    user = user_storage.get_by_login(login)
+    if user:
+        return user
     return {}, 404
-
 
 @users_view.post('/')
 def add():
@@ -30,17 +39,24 @@ def add():
     return user, 201
 
 
-@users_view.put('/<string:uid>')
-def update(uid: str):
+# @users_view.put('/<string:uid>')
+# def update(uid: str):
+#     user_login = request.json["login"]
+#     user_email = request.json["email"]
+#     update_user = user_storage.update(uid=uid, login=user_login, email=user_email)
+#     return asdict(update_user), 200
+
+@users_view.put('/<string:login>')
+def update(login: str):
     user_login = request.json["login"]
     user_email = request.json["email"]
-    update_user = user_storage.update(uid=uid, login=user_login, email=user_email)
-    return asdict(update_user), 200
+    update_user = user_storage.update(login=user_login, email=user_email)
+    return update_user, 200
 
 
-@users_view.delete('/<string:uid>')
-def delete(uid):
-    if user_storage.delete(uid):
+@users_view.delete('/<string:login>')
+def delete(login):
+    if user_storage.delete(login):
         return {}, 204
     return {}, 404
 
