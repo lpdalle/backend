@@ -26,15 +26,15 @@ class UserStorage:
         return new_user
 
 
-    def update(self, login: str, email: str) -> User:
-        db_session.query(User).filter(User.login == login).update({'login': login, 'email':email})
+    def update(self, uid: int, login: str, email: str) -> User:
+        db_session.query(User).filter(User.uid == uid).update({'login': login, 'email':email})
         db_session.commit()
-        user = User.query.filter(User.login==login).first()
+        user = User.query.filter(User.uid==uid).first()
         return user
 
 
-    def delete(self, login: str) -> bool:
-        if db_session.query(User).filter(User.login==login).delete(synchronize_session=False):
+    def delete(self, uid: int) -> bool:
+        if db_session.query(User).filter(User.uid==uid).delete(synchronize_session=False):
             db_session.commit()
             return True
         return False
