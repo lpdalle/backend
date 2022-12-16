@@ -5,7 +5,12 @@ from model import User
 
 class UserStorage:
     def get_all(self) -> list[User]:
-        return [user for user in User.query.all()]
+        return User.query.all()
+
+
+    def get_by_uid(self, uid: int) -> User | None:
+        user = User.query.filter(User.uid == uid).first()
+        return user
 
 
     def get_by_login(self, login: str) -> User | None:
