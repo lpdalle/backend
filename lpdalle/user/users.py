@@ -36,7 +36,7 @@ def add():
     return user, 201
 
 
-@users_view.put('/<string:login>')
+@users_view.put('/<int:uid>')
 def update(uid: int):
     user_login = request.json["login"]
     user_email = request.json["email"]
@@ -46,7 +46,7 @@ def update(uid: int):
     return {}, 404
 
 
-@users_view.delete('/<string:login>')
+@users_view.delete('/<int:uid>')
 def delete(uid: int):
     if user_storage.delete(uid):
         return {}, 204
