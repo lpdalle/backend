@@ -1,44 +1,36 @@
-from db import engine
+from db import db_session
 from model import User
-from sqlalchemy.orm import Session, sessionmaker
 
-
-Session = sessionmaker(bind=engine)
-session = Session()
 
 
 class UserStorage:
     def get_all(self) -> list[User]:
-        all_users = User.query.all()
-        users = []
-        for user in all_users:
-            users.append({'uid': user.uid, 'login': user.login, 'email': user.email})
-        return users
+        return [user for user in User.query.all()]
 
 
     def get_by_login(self, login: str) -> User | None:
         user = User.query.filter(User.login == login).first()
-        return {'uid': user.uid, 'login': user.login, 'email': user.email}
+        return user
 
 
     def add(self, login: str, email: str) -> User:
         uid = None
         new_user = User(uid=uid, login=login, email=email)
-        session.add(new_user)
-        session.commit()
+        db_session.add(new_user)
+        db_session.commit()
         return new_user
 
 
     def update(self, login: str, email: str) -> User:
-        session.query(User).filter(User.login == login).update({'login': login, 'email':email})
-        session.commit()
+        db_session.query(User).filter(User.login == login).update({'login': login, 'email':email})
+        db_session.commit()
         user = User.query.filter(User.login==login).first()
-        return {'uid': user.uid, 'login': user.login, 'email': user.email}
+        return user
 
 
     def delete(self, login: str) -> bool:
-        if session.query(User).filter(User.login==login).delete(synchronize_session=False):
-            session.commit()
+        if db_session.query(User).filter(User.login==login).delete(synchronize_session=False):
+            db_session.commit()
             return True
         return False
 
