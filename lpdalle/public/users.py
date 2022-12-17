@@ -1,6 +1,6 @@
 from flask import Blueprint
-from lpdalle.user.db_storage import UserStorage
 
+from lpdalle.user.db_storage import UserStorage
 
 view_login = Blueprint('user_login', __name__)
 

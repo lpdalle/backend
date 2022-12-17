@@ -1,7 +1,6 @@
-from flask import request
-from flask import Blueprint
-from lpdalle.user.db_storage import UserStorage
+from flask import Blueprint, request
 
+from lpdalle.user.db_storage import UserStorage
 
 users_view = Blueprint('users', __name__)
 user_storage = UserStorage()
@@ -15,7 +14,8 @@ def get_all():
         all_users.append({
             'uid': user.uid,
             'login': user.login,
-            'email': user.email})
+            'email': user.email,
+        })
     return all_users
 
 
@@ -30,26 +30,37 @@ def get_by_uid(uid: int):
 @users_view.post('/')
 def add():
     user = request.json
-    user_login = request.json["login"]
-    user_email = request.json["email"]
+    if not user:
+        return {}, 400
+
+    user_login = user['login']
+    user_email = user['email']
     user_storage.add(login=user_login, email=user_email)
     return user, 201
 
 
 @users_view.put('/<int:uid>')
 def update(uid: int):
-    user_login = request.json["login"]
-    user_email = request.json["email"]
+    payload = request.json
+    if not payload:
+        return {}, 400
+
+    user_login = payload['login']
+    user_email = payload['email']
     update_user = user_storage.update(
         uid=uid,
         login=user_login,
-        email=user_email)
-    if update_user:
-        return {
-            'uid': update_user.uid,
-            'login': update_user.login,
-            'email': update_user.email}, 200
-    return {}, 404
+        email=user_email,
+    )
+
+    if not update_user:
+        return {}, 404
+
+    return {
+        'uid': update_user.uid,
+        'login': update_user.login,
+        'email': update_user.email,
+    }, 200
 
 
 @users_view.delete('/<int:uid>')
