@@ -7,12 +7,10 @@ class UserStorage:
         return User.query.all()
 
     def get_by_uid(self, uid: int) -> User | None:
-        user = User.query.filter(User.uid == uid).first()
-        return user
+        return User.query.filter(User.uid == uid).first()
 
     def get_by_login(self, login: str) -> User | None:
-        user = User.query.filter(User.login == login).first()
-        return user
+        return User.query.filter(User.login == login).first()
 
     def add(self, login: str, email: str) -> User:
         uid = None
@@ -24,13 +22,16 @@ class UserStorage:
     def update(self, uid: int, login: str, email: str) -> User:
         db_session.query(User).filter(User.uid == uid).update({
             'login': login,
-            'email': email})
+            'email': email,
+        })
         db_session.commit()
-        user = User.query.filter(User.uid == uid).first()
-        return user
+        return User.query.filter(User.uid == uid).first()
 
     def delete(self, uid: int) -> bool:
-        if db_session.query(User).filter(User.uid == uid).delete(synchronize_session=False):
-            db_session.commit()
-            return True
-        return False
+        user = db_session.query(User).filter(User.uid == uid)
+        if not user:
+            return False
+
+        user.delete(synchronize_session=False)
+        db_session.commit()
+        return True
