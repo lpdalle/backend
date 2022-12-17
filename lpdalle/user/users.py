@@ -3,10 +3,7 @@ from flask import Blueprint
 from lpdalle.user.db_storage import UserStorage
 
 
-
 users_view = Blueprint('users', __name__)
-
-
 user_storage = UserStorage()
 
 
@@ -15,7 +12,10 @@ def get_all():
     users = user_storage.get_all()
     all_users = []
     for user in users:
-        all_users.append({'uid': user.uid, 'login': user.login, 'email': user.email})
+        all_users.append({
+            'uid': user.uid,
+            'login': user.login,
+            'email': user.email})
     return all_users
 
 
@@ -40,9 +40,15 @@ def add():
 def update(uid: int):
     user_login = request.json["login"]
     user_email = request.json["email"]
-    update_user = user_storage.update(uid=uid, login=user_login, email=user_email)
+    update_user = user_storage.update(
+        uid=uid,
+        login=user_login,
+        email=user_email)
     if update_user:
-        return {'uid': update_user.uid, 'login': update_user.login, 'email': update_user.email}, 200
+        return {
+            'uid': update_user.uid,
+            'login': update_user.login,
+            'email': update_user.email}, 200
     return {}, 404
 
 
@@ -51,5 +57,3 @@ def delete(uid: int):
     if user_storage.delete(uid):
         return {}, 204
     return {}, 404
-
-

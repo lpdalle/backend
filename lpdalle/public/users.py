@@ -6,6 +6,7 @@ view_login = Blueprint('user_login', __name__)
 
 user_storage = UserStorage()
 
+
 @view_login.get('/<string:login>')
 def get_by_login(login: str):
     user = user_storage.get_by_login(login)
