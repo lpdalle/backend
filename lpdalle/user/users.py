@@ -1,5 +1,7 @@
 from flask import Blueprint, request
+from pydantic import ValidationError
 
+from lpdalle.schemas import User
 from lpdalle.user.db_storage import UserStorage
 
 users_view = Blueprint('users', __name__)
@@ -29,14 +31,18 @@ def get_by_uid(uid: int):
 
 @users_view.post('/')
 def add():
-    user = request.json
-    if not user:
-        return {}, 400
+    try:
+        user = request.json
+        if not user:
+            return {}, 400
+        user['uid'] = -1
+        new_user = User(**user)
+    except ValidationError as err:
+        return {'message': str(err)}, 400
 
-    user_login = user['login']
-    user_email = user['email']
-    user_storage.add(login=user_login, email=user_email)
-    return user, 201
+    new_user_add = user_storage.add(login=new_user.login, email=new_user.email)
+    user_add = User.from_orm(new_user_add)
+    return user_add.dict(), 201
 
 
 @users_view.put('/<int:uid>')
