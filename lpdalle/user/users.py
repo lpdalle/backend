@@ -5,24 +5,24 @@ from lpdalle.errors import BadRequestError, ConflictError
 from lpdalle.schemas import User
 from lpdalle.user.db_storage import UserStorage
 
-users_view = Blueprint('users', __name__)
+view_users = Blueprint('users', __name__)
 user_storage = UserStorage()
 
 
-@users_view.get('/')
+@view_users.get('/')
 def get_all():
     users = user_storage.get_all()
     return [User.from_orm(user).dict() for user in users]
 
 
-@users_view.get('/<int:uid>')
+@view_users.get('/<int:uid>')
 def get_by_uid(uid: int):
     get_user = user_storage.get_by_uid(uid)
     user = User.from_orm(get_user)
     return user.dict()
 
 
-@users_view.post('/')
+@view_users.post('/')
 def add():
     try:
         user = request.json
@@ -44,7 +44,7 @@ def add():
     return user_add.dict(), 201
 
 
-@users_view.put('/<int:uid>')
+@view_users.put('/<int:uid>')
 def update(uid: int):
     try:
         payload = request.json
@@ -67,8 +67,7 @@ def update(uid: int):
     return user.dict(), 201
 
 
-@users_view.delete('/<int:uid>')
+@view_users.delete('/<int:uid>')
 def delete(uid: int):
-    # TODO: сделать NotFoundError в сторадж
     user_storage.delete(uid)
     return {}, 204
