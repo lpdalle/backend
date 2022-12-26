@@ -1,5 +1,8 @@
-from db import db_session
-from model import User
+from sqlalchemy.exc import IntegrityError
+
+from lpdalle.db import db_session
+from lpdalle.errors import ConflictError, NotFoundError
+from lpdalle.model import User
 
 
 class UserStorage:
@@ -7,7 +10,10 @@ class UserStorage:
         return User.query.all()
 
     def get_by_uid(self, uid: int) -> User | None:
-        return User.query.filter(User.uid == uid).first()
+        user = User.query.filter(User.uid == uid).first()
+        if not user:
+            raise NotFoundError('users', uid)
+        return user
 
     def get_by_login(self, login: str) -> User | None:
         return User.query.filter(User.login == login).first()
@@ -20,18 +26,25 @@ class UserStorage:
         return new_user
 
     def update(self, uid: int, login: str, email: str) -> User:
-        db_session.query(User).filter(User.uid == uid).update({
-            'login': login,
-            'email': email,
-        })
-        db_session.commit()
+        user = User.query.filter(User.uid == uid).first()
+        if not user:
+            raise NotFoundError('users', uid)
+
+        user.login = login
+        user.email = email
+
+        try:
+            db_session.commit()
+        except IntegrityError:
+            raise ConflictError('users', uid)
+
         return User.query.filter(User.uid == uid).first()
 
     def delete(self, uid: int) -> bool:
-        user = db_session.query(User).filter(User.uid == uid)
+        user = db_session.query(User).filter(User.uid == uid).first()
         if not user:
-            return False
+            raise NotFoundError('users', uid)
 
-        user.delete(synchronize_session=False)
+        db_session.delete(user)
         db_session.commit()
         return True
