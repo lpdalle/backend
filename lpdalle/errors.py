@@ -13,7 +13,7 @@ class ConflictError(AppError):
 
 
 class NotFoundError(AppError):
-    def __init__(self, entity: str, uid: int) -> None:
+    def __init__(self, entity: str, uid: str) -> None:
         super().__init__(f'{entity}[{uid}]', code=404)  # noqa: WPS432
         self.entity = entity
         self.uid = uid

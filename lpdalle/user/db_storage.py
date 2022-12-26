@@ -12,11 +12,14 @@ class UserStorage:
     def get_by_uid(self, uid: int) -> User | None:
         user = User.query.filter(User.uid == uid).first()
         if not user:
-            raise NotFoundError('users', uid)
+            raise NotFoundError('users', str(uid))
         return user
 
     def get_by_login(self, login: str) -> User | None:
-        return User.query.filter(User.login == login).first()
+        user = User.query.filter(User.login == login).first()
+        if not user:
+            raise NotFoundError('users', login)
+        return user
 
     def add(self, login: str, email: str) -> User:
         uid = None
@@ -28,7 +31,7 @@ class UserStorage:
     def update(self, uid: int, login: str, email: str) -> User:
         user = User.query.filter(User.uid == uid).first()
         if not user:
-            raise NotFoundError('users', uid)
+            raise NotFoundError('users', str(uid))
 
         user.login = login
         user.email = email
@@ -43,7 +46,7 @@ class UserStorage:
     def delete(self, uid: int) -> bool:
         user = db_session.query(User).filter(User.uid == uid).first()
         if not user:
-            raise NotFoundError('users', uid)
+            raise NotFoundError('users', str(uid))
 
         db_session.delete(user)
         db_session.commit()
