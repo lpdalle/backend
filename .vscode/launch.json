@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "service",
+            "type": "python",
+            "request": "launch",
+            "module": "lpdalle",
+            "console": "internalConsole",
+            "justMyCode": true
+        },
+        {
+            "name": "db",
+            "type": "python",
+            "request": "launch",
+            "module": "lpdalle.model",
+            "console": "internalConsole",
+            "justMyCode": true
+        }
+    ]
+}

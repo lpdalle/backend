@@ -1,76 +1,69 @@
 from flask import Blueprint, request
-from pydantic import ValidationError
 
+from lpdalle.errors import BadRequestError
 from lpdalle.schemas import User
 from lpdalle.user.db_storage import UserStorage
 
-users_view = Blueprint('users', __name__)
+view_users = Blueprint('users', __name__)
 user_storage = UserStorage()
 
 
-@users_view.get('/')
+@view_users.get('/')
 def get_all():
     users = user_storage.get_all()
-    all_users = []
-    for user in users:
-        all_users.append({
-            'uid': user.uid,
-            'login': user.login,
-            'email': user.email,
-        })
-    return all_users
+    return [User.from_orm(user).dict() for user in users]
 
 
-@users_view.get('/<int:uid>')
+@view_users.get('/<int:uid>')
 def get_by_uid(uid: int):
-    user = user_storage.get_by_uid(uid)
-    if user:
-        return {'uid': user.uid, 'login': user.login, 'email': user.email}
-    return {}, 404
+    get_user = user_storage.get_by_uid(uid)
+    user = User.from_orm(get_user)
+    return user.dict()
 
 
-@users_view.post('/')
+@view_users.post('/')
 def add():
     try:
         user = request.json
-        if not user:
-            return {}, 400
-        user['uid'] = -1
-        new_user = User(**user)
-    except ValidationError as err:
-        return {'message': str(err)}, 400
+    except BadRequestError as badrequest_err:
+        return badrequest_err
+
+    if not user:
+        raise BadRequestError('Empty user data!')
+
+    user['uid'] = -1
+    new_user = User(**user)
 
     new_user_add = user_storage.add(login=new_user.login, email=new_user.email)
+
     user_add = User.from_orm(new_user_add)
     return user_add.dict(), 201
 
 
-@users_view.put('/<int:uid>')
+@view_users.put('/<int:uid>')
 def update(uid: int):
-    payload = request.json
-    if not payload:
-        return {}, 400
+    try:
+        payload = request.json
+    except BadRequestError as badrequest_err:
+        return badrequest_err
 
-    user_login = payload['login']
-    user_email = payload['email']
+    if not payload:
+        raise BadRequestError('Empty payload')
+
+    payload['uid'] = -1
+    user = User(**payload)
+
     update_user = user_storage.update(
         uid=uid,
-        login=user_login,
-        email=user_email,
+        login=user.login,
+        email=user.email,
     )
 
-    if not update_user:
-        return {}, 404
-
-    return {
-        'uid': update_user.uid,
-        'login': update_user.login,
-        'email': update_user.email,
-    }, 200
+    user = User.from_orm(update_user)
+    return user.dict(), 201
 
 
-@users_view.delete('/<int:uid>')
+@view_users.delete('/<int:uid>')
 def delete(uid: int):
-    if user_storage.delete(uid):
-        return {}, 204
-    return {}, 404
+    user_storage.delete(uid)
+    return {}, 204

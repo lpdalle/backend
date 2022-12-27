@@ -8,3 +8,13 @@ class User(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class Generations(BaseModel):
+    uid: int
+    user_id: int
+    prompt: str
+    status: str
+
+    class Config:
+        orm_mode = True
