@@ -15,8 +15,8 @@ def handle_validation_error(error: ValidationError):
     return {'message': str(error)}, 422
 
 
-def handle_emptystring_error(err):
-    return 'Empty data', 400
+def handle_emptystring_error(error):
+    return {'Empty data': str(error)}, 400
 
 
 def main() -> None:

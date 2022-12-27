@@ -1,7 +1,6 @@
 from flask import Blueprint, request
-from sqlalchemy.exc import IntegrityError
 
-from lpdalle.errors import BadRequestError, ConflictError
+from lpdalle.errors import BadRequestError
 from lpdalle.schemas import User
 from lpdalle.user.db_storage import UserStorage
 
@@ -26,8 +25,8 @@ def get_by_uid(uid: int):
 def add():
     try:
         user = request.json
-    except BadRequestError:
-        raise BadRequestError('message')
+    except BadRequestError as badrequest_err:
+        return badrequest_err
 
     if not user:
         raise BadRequestError('Empty user data!')
@@ -35,10 +34,7 @@ def add():
     user['uid'] = -1
     new_user = User(**user)
 
-    try:
-        new_user_add = user_storage.add(login=new_user.login, email=new_user.email)
-    except IntegrityError:
-        raise ConflictError('users', new_user.uid)
+    new_user_add = user_storage.add(login=new_user.login, email=new_user.email)
 
     user_add = User.from_orm(new_user_add)
     return user_add.dict(), 201
@@ -48,8 +44,8 @@ def add():
 def update(uid: int):
     try:
         payload = request.json
-    except BadRequestError:
-        raise BadRequestError('message')
+    except BadRequestError as badrequest_err:
+        return badrequest_err
 
     if not payload:
         raise BadRequestError('Empty payload')

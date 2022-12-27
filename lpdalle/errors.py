@@ -22,4 +22,3 @@ class NotFoundError(AppError):
 class BadRequestError(AppError):
     def __init__(self, reason: str) -> None:
         super().__init__(reason, code=400)  # noqa: WPS432
-        self.reason = reason
