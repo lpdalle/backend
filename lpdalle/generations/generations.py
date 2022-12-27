@@ -15,11 +15,6 @@ def get_by_uid(uid: int):
     generation = Generations.from_orm(get_generation)
     return generation.dict()
 
-# TODO: add user all generations
-# @view_generations.get('/<int:user_id>')
-# def get_user_generations(user_id: int):
-#     pass
-
 
 @view_generations.post('/')
 def add():

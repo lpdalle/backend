@@ -3,6 +3,7 @@ from pydantic import ValidationError
 
 from lpdalle.errors import AppError
 from lpdalle.generations.generations import view_generations
+from lpdalle.public.generations import view_user_generations
 from lpdalle.public.users import view_login
 from lpdalle.user.users import view_users
 
@@ -22,8 +23,9 @@ def handle_emptystring_error(error):
 def main() -> None:
     app = Flask(__name__)
     app.register_blueprint(view_users, url_prefix='/api/v1/users')
-    app.register_blueprint(view_login, url_prefix='/api/v1/public/users')
+    app.register_blueprint(view_login, url_prefix='/api/v1/public/login')
     app.register_blueprint(view_generations, url_prefix='/api/v1/generations')
+    app.register_blueprint(view_user_generations, url_prefix='/api/v1/public/user_generations')
     app.register_error_handler(AppError, handle_app_error)
     app.register_error_handler(ValidationError, handle_validation_error)
     app.register_error_handler(400, handle_emptystring_error)  # noqa: WPS432
