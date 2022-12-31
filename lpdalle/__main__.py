@@ -1,11 +1,15 @@
 from flask import Flask
 from pydantic import ValidationError
 
+from lpdalle.db import db_session
 from lpdalle.errors import AppError
-from lpdalle.generations.generations import view_generations
-from lpdalle.public.generations import view_user_generations
+from lpdalle.generation.generation import view_generation
 from lpdalle.public.users import view_login
 from lpdalle.user.users import view_users
+
+
+def shutdown_session(exception=None):
+    db_session.remove()
 
 
 def handle_app_error(error: AppError):
@@ -24,11 +28,14 @@ def main() -> None:
     app = Flask(__name__)
     app.register_blueprint(view_users, url_prefix='/api/v1/users')
     app.register_blueprint(view_login, url_prefix='/api/v1/public/login')
-    app.register_blueprint(view_generations, url_prefix='/api/v1/generations')
-    app.register_blueprint(view_user_generations, url_prefix='/api/v1/public/user_generations')
+    app.register_blueprint(
+        view_generation,
+        url_prefix='/api/v1/users/<int:user_id>/generation',
+    )
     app.register_error_handler(AppError, handle_app_error)
     app.register_error_handler(ValidationError, handle_validation_error)
     app.register_error_handler(400, handle_emptystring_error)  # noqa: WPS432
+    app.teardown_appcontext(shutdown_session)
     app.run()
 
 
