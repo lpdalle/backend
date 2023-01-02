@@ -1,9 +1,9 @@
 from flask import Blueprint
 
-from lpdalle.generations.gen_storage import GenerationsStorage
+from lpdalle.generation.gen_storage import GenerationsStorage
 from lpdalle.schemas import Generations
 
-view_user_generations = Blueprint('user_generations', __name__)
+view_user_generations = Blueprint('user_generation', __name__)
 
 storage = GenerationsStorage()
 

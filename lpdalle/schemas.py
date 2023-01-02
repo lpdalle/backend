@@ -10,7 +10,7 @@ class User(BaseModel):
         orm_mode = True
 
 
-class Generations(BaseModel):
+class Generation(BaseModel):
     uid: int
     user_id: int
     prompt: str
