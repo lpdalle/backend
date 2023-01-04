@@ -21,6 +21,13 @@ def get_by_uid(uid: int):
     return user.dict()
 
 
+@view_users.get('/telegram/<str:telgram_id>')
+def get_by_tg_id(telegram_id: str):
+    tg_id = user_storage.get_by_telegram_id(telegram_id)
+    user = User.from_orm(tg_id)
+    return user.dict()
+
+
 @view_users.post('/')
 def add():
     try:
@@ -67,3 +74,5 @@ def update(uid: int):
 def delete(uid: int):
     user_storage.delete(uid)
     return {}, 204
+
+

@@ -13,6 +13,13 @@ class GenerationStorage:
 
         return gen
 
+    def get_by_telegram_id(self, telegram_id: str) -> list[Generation]:
+        gens = Generation.query.filter(Generation.telegram_id == telegram_id)
+        gens = gens.all()
+        if not gens:
+            raise NotFoundError('Generations not found', telegram_id)
+        return gens
+
     def get_user_generations(self, user_id: int) -> list[Generation]:
         gens = Generation.query.filter(Generation.user_id == user_id)
         gens = gens.all()

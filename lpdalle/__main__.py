@@ -33,6 +33,7 @@ def main() -> None:
         url_prefix='/api/v1/users/<int:user_id>/generation',
     )
     app.register_blueprint(view_generation, url_prefix='/api/v1/generation')
+
     app.register_error_handler(AppError, handle_app_error)
     app.register_error_handler(ValidationError, handle_validation_error)
     app.register_error_handler(400, handle_emptystring_error)  # noqa: WPS432

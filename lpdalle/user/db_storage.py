@@ -21,6 +21,13 @@ class UserStorage:
             raise NotFoundError('users', login)
         return user
 
+    def get_by_telegram_id(self, telegram_id: str):
+        user = db_session.query(User).filter(User.telegram_id == telegram_id).first()
+
+        if not user:
+            raise NotFoundError('users', telegram_id)
+        return user
+
     def add(self, login: str, email: str) -> User:
         new_user = User(login=login, email=email)
         db_session.add(new_user)
