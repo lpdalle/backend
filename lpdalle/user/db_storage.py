@@ -12,7 +12,7 @@ class UserStorage:
     def get_by_uid(self, uid: int) -> User | None:
         user = User.query.filter(User.uid == uid).first()
         if not user:
-            raise NotFoundError('users', str(uid))
+            raise NotFoundError('User not found:', str(uid))
         return user
 
     def get_by_login(self, login: str) -> User | None:
@@ -21,8 +21,15 @@ class UserStorage:
             raise NotFoundError('users', login)
         return user
 
-    def add(self, login: str, email: str) -> User:
-        new_user = User(login=login, email=email)
+    def get_by_telegram_id(self, telegram_id: str):
+        user = db_session.query(User).filter(User.telegram_id == telegram_id).first()
+
+        if not user:
+            raise NotFoundError('users', telegram_id)
+        return user
+
+    def add(self, login: str, email: str, telegram_id: str) -> User:
+        new_user = User(login=login, email=email, telegram_id=telegram_id)
         db_session.add(new_user)
 
         try:
@@ -35,7 +42,7 @@ class UserStorage:
     def update(self, uid: int, login: str, email: str) -> User:
         user = User.query.filter(User.uid == uid).first()
         if not user:
-            raise NotFoundError('users', str(uid))
+            raise NotFoundError('User not found: ', str(uid))
 
         user.login = login
         user.email = email
@@ -45,7 +52,7 @@ class UserStorage:
         except IntegrityError:
             raise ConflictError('users', uid)
 
-        return User.query.filter(User.uid == uid).first()
+        return user
 
     def delete(self, uid: int) -> bool:
         user = db_session.query(User).filter(User.uid == uid).first()

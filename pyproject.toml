@@ -2,15 +2,16 @@
 name = "backend"
 version = "0.1.0"
 description = ""
-authors = ["Artem Voskresensky <metravs@gmail.com>"]
+authors = ["vosart"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-sqlalchemy = "^1.4.45"
 flask = "^2.2.2"
-pydantic = "^1.10.2"
-psycopg2 = "^2.9.5"
+pydantic = "^1.10.4"
+sqlalchemy = "^1.4.45"
+psycopg2-binary = "^2.9.5"
+
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^0.991"

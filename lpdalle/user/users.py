@@ -21,6 +21,13 @@ def get_by_uid(uid: int):
     return user.dict()
 
 
+@view_users.get('/telegram/<string:telegram_id>')
+def get_by_tg_id(telegram_id: str):
+    tg_id = user_storage.get_by_telegram_id(telegram_id)
+    user = User.from_orm(tg_id)
+    return user.dict()
+
+
 @view_users.post('/')
 def add():
     try:
@@ -34,7 +41,11 @@ def add():
     user['uid'] = -1
     new_user = User(**user)
 
-    new_user_add = user_storage.add(login=new_user.login, email=new_user.email)
+    new_user_add = user_storage.add(
+        login=new_user.login,
+        email=new_user.email,
+        telegram_id=new_user.telegram_id,
+    )
 
     user_add = User.from_orm(new_user_add)
     return user_add.dict(), 201
@@ -51,6 +62,7 @@ def update(uid: int):
         raise BadRequestError('Empty payload')
 
     payload['uid'] = -1
+    payload['telegram_id'] = -1
     user = User(**payload)
 
     update_user = user_storage.update(

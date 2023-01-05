@@ -5,12 +5,13 @@ class User(BaseModel):
     uid: int
     login: str
     email: str
+    telegram_id: str
 
     class Config:
         orm_mode = True
 
 
-class Generations(BaseModel):
+class Generation(BaseModel):
     uid: int
     user_id: int
     prompt: str
