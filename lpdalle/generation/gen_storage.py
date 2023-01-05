@@ -14,7 +14,10 @@ class GenerationStorage:
         return gen
 
     def get_by_telegram_id(self, telegram_id: str) -> list[Generation]:
-        gens = Generation.query.filter(Generation.telegram_id == telegram_id)
+        user = db_session.query(User.uid)
+        user = user.filter(User.telegram_id == telegram_id).first()
+
+        gens = Generation.query.filter(Generation.user_id == user[0])
         gens = gens.all()
         if not gens:
             raise NotFoundError('Generations not found', telegram_id)
@@ -29,11 +32,8 @@ class GenerationStorage:
         return gens
 
     def add(self, user_id: int, prompt: str, status: str) -> Generation:
-        user = db_session.query(User.telegram_id)
-        user = user.filter(User.uid == user_id).first()
         new_generation = Generation(
             user_id=user_id,
-            telegram_id=user[0],
             prompt=prompt,
             status=status,
         )

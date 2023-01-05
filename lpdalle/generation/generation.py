@@ -5,7 +5,7 @@ from lpdalle.generation.gen_storage import GenerationStorage
 from lpdalle.schemas import Generation
 
 view_generation = Blueprint('generation', __name__)
-view_user_generation = Blueprint('user_generation', __name__)
+view_user_generations = Blueprint('user_generations', __name__)
 storage = GenerationStorage()
 
 
@@ -16,7 +16,7 @@ def get_by_uid(uid: int):
     return generation.dict()
 
 
-@view_user_generation.get('/')
+@view_user_generations.get('/')
 def get_by_user_id(user_id: int):
     get_generation = storage.get_user_generations(user_id)
     return [Generation.from_orm(generation).dict() for generation in get_generation]
@@ -28,7 +28,7 @@ def get_by_tg_id(telegram_id: str):
     return [Generation.from_orm(generation).dict() for generation in get_generation]
 
 
-@view_user_generation.post('/')
+@view_user_generations.post('/')
 def add(user_id: int):
     try:
         payload = request.json
@@ -53,6 +53,4 @@ def add(user_id: int):
 
 
 # GET <'/generations/id_gen/images/'>
-# POST <'/generations/'> JSON
 # POST <'/generations/id_gen/cancel>'>
-# GET <'/generations/id_gen'>

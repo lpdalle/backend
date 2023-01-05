@@ -3,7 +3,7 @@ from pydantic import ValidationError
 
 from lpdalle.db import db_session
 from lpdalle.errors import AppError
-from lpdalle.generation.generation import view_generation, view_user_generation
+from lpdalle.generation.generation import view_generation, view_user_generations
 from lpdalle.public.users import view_login
 from lpdalle.user.users import view_users
 
@@ -29,7 +29,7 @@ def main() -> None:
     app.register_blueprint(view_users, url_prefix='/api/v1/users')
     app.register_blueprint(view_login, url_prefix='/api/v1/public/login')
     app.register_blueprint(
-        view_user_generation,
+        view_user_generations,
         url_prefix='/api/v1/users/<int:user_id>/generation',
     )
     app.register_blueprint(view_generation, url_prefix='/api/v1/generation')
