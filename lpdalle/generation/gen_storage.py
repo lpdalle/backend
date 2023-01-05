@@ -27,8 +27,7 @@ class GenerationStorage:
         gens = Generation.query.filter(Generation.user_id == user_id)
         gens = gens.all()
         if not gens:
-            raise NotFoundError('Generations not found', str(user_id))
-
+            return []
         return gens
 
     def add(self, user_id: int, prompt: str, status: str) -> Generation:
