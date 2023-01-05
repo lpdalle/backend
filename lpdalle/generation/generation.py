@@ -22,12 +22,6 @@ def get_by_user_id(user_id: int):
     return [Generation.from_orm(generation).dict() for generation in get_generation]
 
 
-@view_generation.get('/telegram/<string:telegram_id>')
-def get_by_tg_id(telegram_id: str):
-    get_generation = storage.get_by_telegram_id(telegram_id)
-    return [Generation.from_orm(generation).dict() for generation in get_generation]
-
-
 @view_user_generations.post('/')
 def add(user_id: int):
     try:
