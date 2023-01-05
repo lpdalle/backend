@@ -19,15 +19,13 @@ def get_by_uid(uid: int):
 @view_user_generation.get('/')
 def get_by_user_id(user_id: int):
     get_generation = storage.get_user_generations(user_id)
-
     return [Generation.from_orm(generation).dict() for generation in get_generation]
 
 
-@view_user_generation.get('/telegram/<str:telegram_id')
+@view_generation.get('/telegram/<string:telegram_id>')
 def get_by_tg_id(telegram_id: str):
     get_generation = storage.get_by_telegram_id(telegram_id)
-    generation = Generation.from_orm(get_generation)
-    return generation.dict()
+    return [Generation.from_orm(generation).dict() for generation in get_generation]
 
 
 @view_user_generation.post('/')

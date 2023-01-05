@@ -2,7 +2,7 @@ from sqlalchemy.exc import IntegrityError
 
 from lpdalle.db import db_session
 from lpdalle.errors import ConflictError, NotFoundError
-from lpdalle.model import Generation
+from lpdalle.model import Generation, User
 
 
 class GenerationStorage:
@@ -29,7 +29,14 @@ class GenerationStorage:
         return gens
 
     def add(self, user_id: int, prompt: str, status: str) -> Generation:
-        new_generation = Generation(user_id=user_id, prompt=prompt, status=status)
+        user = db_session.query(User.telegram_id)
+        user = user.filter(User.uid == user_id).first()
+        new_generation = Generation(
+            user_id=user_id,
+            telegram_id=user[0],
+            prompt=prompt,
+            status=status,
+        )
         db_session.add(new_generation)
 
         try:

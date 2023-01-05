@@ -14,7 +14,6 @@ class User(BaseModel):
 class Generation(BaseModel):
     uid: int
     user_id: int
-    telegram_id: str
     prompt: str
     status: str
 
