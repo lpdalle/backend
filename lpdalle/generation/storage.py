@@ -34,3 +34,21 @@ class GenerationStorage:
             raise ConflictError('generation', new_generation.uid)
 
         return new_generation
+
+    def update_status(self, status='pending'):
+        generation = Generation.query.filter(Generation.status == status).first()
+        generation.status = 'running'
+        try:
+            db_session.commit()
+        except IntegrityError:
+            raise ConflictError('generation', generation.uid)
+        return generation
+
+    def complete(self, uid: int, status='complete'):
+        generation = Generation.query.filter(Generation.uid == uid).first()
+        generation.status = status
+        try:
+            db_session.commit()
+        except IntegrityError:
+            raise ConflictError('generation', generation.uid)
+        return generation
