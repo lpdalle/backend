@@ -54,3 +54,5 @@ class GenerationStorage:
         except IntegrityError:
             raise ConflictError('generation', generation.uid)
         return generation
+
+    # TODO: надо ли в этой функции что-то возвращать...
