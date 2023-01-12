@@ -49,6 +49,8 @@ def add(user_id: int):
 @view_generation.put('/acquire')
 def update_status():
     update = storage.update_status()
+    if not update:
+        return []
     new_status = Generation.from_orm(update)
     return new_status.dict(), 201
 

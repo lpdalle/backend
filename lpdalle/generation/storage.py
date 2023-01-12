@@ -37,6 +37,8 @@ class GenerationStorage:
 
     def update_status(self, status='pending'):
         generation = Generation.query.filter(Generation.status == status).first()
+        if not generation:
+            return []
         generation.status = 'running'
         try:
             db_session.commit()
