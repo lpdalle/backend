@@ -3,9 +3,9 @@ from pydantic import ValidationError
 
 from lpdalle.db import db_session
 from lpdalle.errors import AppError
-from lpdalle.generation.generation import view_generation, view_user_generations
+from lpdalle.generation.view import view_generation, view_user_generations
 from lpdalle.public.users import view_login
-from lpdalle.user.users import view_users
+from lpdalle.user.view import view_users
 
 
 def shutdown_session(exception=None):

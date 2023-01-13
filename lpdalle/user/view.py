@@ -2,7 +2,7 @@ from flask import Blueprint, request
 
 from lpdalle.errors import BadRequestError
 from lpdalle.schemas import User
-from lpdalle.user.db_storage import UserStorage
+from lpdalle.user.storage import UserStorage
 
 view_users = Blueprint('users', __name__)
 user_storage = UserStorage()
