@@ -46,16 +46,16 @@ def add(user_id: int):
     return new_gen_add.dict(), 201
 
 
-@view_generation.put('/acquire')
-def update_status():
-    update = storage.update_status()
+@view_generation.post('/acquire')
+def acquire():
+    update = storage.acquire()
     if not update:
         return []
     new_status = Generation.from_orm(update)
     return new_status.dict(), 201
 
 
-@view_generation.put('/<int:uid>/complete')
+@view_generation.post('/<int:uid>/complete')
 def complete_generation(uid: int):
     update = storage.complete(uid=uid)
     complete = Generation.from_orm(update)

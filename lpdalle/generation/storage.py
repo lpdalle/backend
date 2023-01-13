@@ -35,7 +35,7 @@ class GenerationStorage:
 
         return new_generation
 
-    def update_status(self, status='pending'):
+    def acquire(self, status='pending'):
         generation = Generation.query.filter(Generation.status == status).first()
         if not generation:
             return []
@@ -54,5 +54,3 @@ class GenerationStorage:
         except IntegrityError:
             raise ConflictError('generation', generation.uid)
         return generation
-
-    # TODO: надо ли в этой функции что-то возвращать...
