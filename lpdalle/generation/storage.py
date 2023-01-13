@@ -40,17 +40,11 @@ class GenerationStorage:
         if not generation:
             return []
         generation.status = 'running'
-        try:
-            db_session.commit()
-        except IntegrityError:
-            raise ConflictError('generation', generation.uid)
+        db_session.commit()
         return generation
 
     def complete(self, uid: int, status='complete'):
         generation = Generation.query.filter(Generation.uid == uid).first()
         generation.status = status
-        try:
-            db_session.commit()
-        except IntegrityError:
-            raise ConflictError('generation', generation.uid)
+        db_session.commit()
         return generation
