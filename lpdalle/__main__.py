@@ -31,7 +31,7 @@ def main() -> None:
     app.register_blueprint(view_login, url_prefix='/api/v1/public/login')
     app.register_blueprint(
         view_user_generations,
-        url_prefix='/api/v1/users/<int:user_id>/generation',
+        url_prefix='/api/v1/users/<int:user_id>/generations',
     )
     app.register_blueprint(view_generation, url_prefix='/api/v1/generation')
 
