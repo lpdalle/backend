@@ -60,3 +60,11 @@ def complete_generation(uid: int):
     update = storage.complete(uid=uid)
     complete = Generation.from_orm(update)
     return complete.dict(), 201
+
+
+@view_generation.post('/<int:uid>/images/')
+def download_file(uid: int):
+    data = request.data
+    with open('lpdalle/generation/images/img1.png', 'wb') as new_img:
+        new_img.write(data)
+    return {'file': 'File downloaded'}, 201
