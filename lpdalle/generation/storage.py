@@ -2,7 +2,7 @@ from sqlalchemy.exc import IntegrityError
 
 from lpdalle.db import db_session
 from lpdalle.errors import ConflictError, NotFoundError
-from lpdalle.model import Generation
+from lpdalle.model import Generation, Images
 
 
 class GenerationStorage:
@@ -35,6 +35,27 @@ class GenerationStorage:
 
         return new_generation
 
+    def add_url(self, url: str, generation_id: int):
+        image_url = Images(
+            url=url,
+            generation_id=generation_id,
+        )
+        db_session.add(image_url)
+
+        try:
+            db_session.commit()
+        except IntegrityError:
+            raise ConflictError('generation', image_url.generation_id)
+
+        return image_url
+
+    def get_file(self, generation_id: int):
+        file_url = db_session.query(Images.url)
+        file_url = file_url.filter(Images.generation_id == generation_id).first()
+        if not file_url:
+            return []
+        return file_url
+
     def acquire(self, status='pending'):
         generation = Generation.query.filter(Generation.status == status).first()
         if not generation:
@@ -48,3 +69,4 @@ class GenerationStorage:
         generation.status = status
         db_session.commit()
         return generation
+

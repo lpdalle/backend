@@ -33,7 +33,7 @@ def main() -> None:
         view_user_generations,
         url_prefix='/api/v1/users/<int:user_id>/generations',
     )
-    app.register_blueprint(view_generation, url_prefix='/api/v1/generation')
+    app.register_blueprint(view_generation, url_prefix='/api/v1/generations')
 
     app.register_error_handler(AppError, handle_app_error)
     app.register_error_handler(ValidationError, handle_validation_error)

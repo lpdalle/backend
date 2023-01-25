@@ -19,3 +19,12 @@ class Generation(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class Images(BaseModel):
+    uid: int
+    url: str
+    generation_id: int
+
+    class Config:
+        orm_mode = True
