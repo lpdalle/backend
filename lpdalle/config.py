@@ -4,13 +4,13 @@ from dataclasses import dataclass
 
 @dataclass
 class Config:
-    elephant_url: str
+    db_key: str
     port: str
 
 
 def load() -> Config:
     return Config(
-        elephant_url=os.environ['ELEPHANT_URL'],
+        db_key=os.environ['DB_KEY'],
         port=os.environ['PORT'],
     )
 
