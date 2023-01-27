@@ -69,4 +69,3 @@ class GenerationStorage:
         generation.status = status
         db_session.commit()
         return generation
-

@@ -2,9 +2,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-from lpdalle.config import ELEPHANT_URL
+from lpdalle.config import conf
 
-engine = create_engine(ELEPHANT_URL, echo=True)
+engine = create_engine(conf.elephant_url, echo=True)
 db_session = scoped_session(sessionmaker(bind=engine))
 
 Base = declarative_base()

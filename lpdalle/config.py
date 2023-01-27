@@ -1,4 +1,18 @@
 import os
+from dataclasses import dataclass
 
-ELEPHANT_URL = os.environ['ELEPHANT_URL']
-PORT = int(os.environ['PORT'])
+
+@dataclass
+class Config:
+    elephant_url: str
+    port: str
+
+
+def load() -> Config:
+    return Config(
+        elephant_url=os.environ['ELEPHANT_URL'],
+        port=os.environ['PORT'],
+    )
+
+
+conf = load()
