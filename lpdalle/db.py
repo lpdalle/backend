@@ -4,7 +4,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 
 from lpdalle.config import conf
 
-engine = create_engine(conf.elephant_url, echo=True)
+engine = create_engine(conf.db_key, echo=True)
 db_session = scoped_session(sessionmaker(bind=engine))
 
 Base = declarative_base()
