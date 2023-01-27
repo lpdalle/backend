@@ -1,7 +1,7 @@
 from flask import Flask
 from pydantic import ValidationError
 
-from lpdalle.config import PORT
+from lpdalle.config import conf
 from lpdalle.db import db_session
 from lpdalle.errors import AppError
 from lpdalle.generation.view import view_generation, view_user_generations
@@ -39,7 +39,7 @@ def main() -> None:
     app.register_error_handler(ValidationError, handle_validation_error)
     app.register_error_handler(400, handle_emptystring_error)  # noqa: WPS432
     app.teardown_appcontext(shutdown_session)
-    app.run(host='0.0.0.0', port=PORT)
+    app.run(host='0.0.0.0', port=conf.port)
 
 
 if __name__ == '__main__':
