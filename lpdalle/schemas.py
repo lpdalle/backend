@@ -4,7 +4,7 @@ from pydantic import BaseModel
 class User(BaseModel):
     uid: int
     login: str
-    email: str
+    email: str | None
     telegram_id: str
 
     class Config:
