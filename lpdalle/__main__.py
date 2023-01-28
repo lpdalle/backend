@@ -39,7 +39,7 @@ def main() -> None:
     app.register_error_handler(ValidationError, handle_validation_error)
     app.register_error_handler(400, handle_emptystring_error)  # noqa: WPS432
     app.teardown_appcontext(shutdown_session)
-    app.run(host='0.0.0.0', port=conf.port)
+    app.run(host='0.0.0.0', port=int(conf.port))
 
 
 if __name__ == '__main__':
