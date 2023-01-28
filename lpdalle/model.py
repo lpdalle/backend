@@ -9,7 +9,7 @@ class User(Base):
     uid = Column(Integer, primary_key=True)
     telegram_id = Column(String, index=True, unique=True)
     login = Column(String, nullable=False, unique=True)
-    email = Column(String(120), nullable=False, unique=True)  # noqa: WPS432
+    email = Column(String(120), nullable=True, unique=False)  # noqa: WPS432
     generation = relationship('Generation', back_populates='user')
 
     def __repr__(self) -> str:
