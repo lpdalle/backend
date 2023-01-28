@@ -28,7 +28,7 @@ class UserStorage:
             raise NotFoundError('users', telegram_id)
         return user
 
-    def add(self, login: str, email: str, telegram_id: str) -> User:
+    def add(self, login: str, email: str | None, telegram_id: str) -> User:
         new_user = User(login=login, email=email, telegram_id=telegram_id)
         db_session.add(new_user)
 
